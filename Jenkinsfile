@@ -52,7 +52,7 @@ pipeline {
                 script {
                     gv.deployapp()
                     echo "deploying to ${params.ONE}"
-                     echo "deploying to ${params.ONE}
+                     echo "deploying to ${params.TWO}"
                     
                 }
             
