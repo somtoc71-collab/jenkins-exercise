@@ -1,14 +1,16 @@
-def buildapp() {
+def buildjar() {
     echo "building the application"
+    sh 'mvn package'
 }
 
-def testapp() {
-    echo "testing the application"
+def buildimage() {
+     echo 'building the image ..'
+     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')])            sh 'docker build -t bamzy14/my-repo:jma-2.0 .'
+       sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
 }
 
-def deployapp() {
+def deploy() {
     echo "deploying the application"
-    echo "deploying version ${params.VERSION}"
 }
 
 return this
