@@ -11,7 +11,7 @@ def buildimage() {
     sh 'docker push bamzy14/my-repo:jma-2.0'
 }
 
-def deploy() {
+def deployapp() {
     echo "deploying the application"
 }
 
