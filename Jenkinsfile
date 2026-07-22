@@ -1,56 +1,31 @@
-def gv
-
 pipeline {
     agent any
-    parameters {
-        choice(name: 'VERSION', choices: ['1.1.0', '1.2.0', '1.3.0'], description: 'select a version to deploy')
-        booleanParam(name: 'executeTests', defaultValue: true, description: 'execute tests during deployment')
-
+    tools {
+        maven 'Maven'
     }
     stages {
-        stage(init) {
+        stage("build jar") {
             steps {
                 script {
-                    gv = load "script.groovy"
+                    echo "building the application.."
+                    sh 'mvn package'
                 }
             }
-
-        }
-        stage("build") {
+          stage("build image") {
             steps {
                 script {
-                    gv.buildapp()
+                    echo "building the image.."
+                    withCredentials([usernamePassword(credentialsId:'docker-hub-credentials', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) 
+                     sh 'docker build -t bamzy14/my-repo:jma-2.0 .'
+                     sh "echo $PASSWORD | docker login -u $USERNAME --password-stdin"
+                     sh  'docker push bamzy14/my-repo:jma-2.0'  
+                    } 
                 }
-            
-            }
-        }
-
-        stage("test") {
-            when {
-                expression { 
-                    params.executeTests == true
-                }
-            }
-            steps {
-                script {
-                    gv.testapp()
-                }
-            
-            }
-        } 
-
+ 
         stage("deploy") {
-            input {
-                message "select the environment to deploy to"
-                ok "done"
-                parameters {
-                    choice(name: 'env', choices: ['dev', 'staging', 'prod'], description: 'select a version to deploy')
-                }
-            }
             steps {
                 script {
-                    gv.deployapp()
-                    echo "deploying to ${params.env}"
+                    echo "deploying the application.."
                 }
             
             }
