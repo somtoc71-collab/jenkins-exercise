@@ -1,7 +1,7 @@
 def gv
 pipeline {
     agent any
-    toolpipelines {
+    tools {
      maven  'Maven'
     }  
     stages {
