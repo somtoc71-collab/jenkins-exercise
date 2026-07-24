@@ -33,6 +33,7 @@ pipeline {
         stage("deploy") {
             steps {
                 script {
+                    def gv = load "script.groovy"
                     gv.deployapp()
                 }
             
